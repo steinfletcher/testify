@@ -402,6 +402,30 @@ func Exactly(t TestingT, expected, actual interface{}, msgAndArgs ...interface{}
 
 }
 
+// NoEmptyFields asserts that the specified object does not contain any empty fields
+//
+//    assert.NoEmptyFields(t, obj)
+func NoEmptyFields(t TestingT, object interface{}, msgAndArgs ...interface{}) bool {
+	if h, ok := t.(tHelper); ok {
+		h.Helper()
+	}
+
+	if isNil(object) {
+		return false
+	}
+
+	typ := reflect.TypeOf(object)
+	val := reflect.ValueOf(object)
+	for i := 0; i < typ.NumField(); i++ {
+		fieldValue := val.Field(i).Interface()
+		if Empty(t, fieldValue, msgAndArgs...) {
+			return false
+		}
+	}
+
+	return true
+}
+
 // NotNil asserts that the specified object is not nil.
 //
 //    assert.NotNil(t, err)

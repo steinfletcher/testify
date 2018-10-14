@@ -332,6 +332,26 @@ func TestNotNil(t *testing.T) {
 
 }
 
+func TestNoEmptyFields(t *testing.T) {
+
+	mockT := new(testing.T)
+
+	type testStruct struct {
+		A string
+	}
+
+	if !NoEmptyFields(mockT, testStruct{A: "A"}) {
+		t.Error(`NoEmptyFields should return true: object is testStruct{A: "A"}`)
+	}
+	if NoEmptyFields(mockT, testStruct{}) {
+		t.Error("NoEmptyFields should return false: object has empty fields")
+	}
+	if NotNil(mockT, nil) {
+		t.Error("NoEmptyFields should return false: object is nil")
+	}
+
+}
+
 func TestNil(t *testing.T) {
 
 	mockT := new(testing.T)
